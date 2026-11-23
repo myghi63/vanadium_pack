@@ -3,7 +3,16 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
+// overrides Jelly: vendor/lineage/config/common.mk packages Jelly and make
+// inheritance cannot undo an inherited PRODUCT_PACKAGES entry from a child
+// mk (per-file snapshots in build/make/core/node_fns.mk); the Soong overrides
+// mutator suppresses Jelly's install whenever this overlay is in the image,
+// i.e. only when the Vanadium pack is in the build.
 runtime_resource_overlay {
     name: "VanadiumWebviewOverlay",
-    vendor: true,
+    product_specific: true,
+
+    overrides: [
+        "Jelly",
+    ],
 }
