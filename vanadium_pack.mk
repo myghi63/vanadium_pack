@@ -7,7 +7,7 @@
 #     $(call inherit-product-if-exists, vendor/vanadium_pack/vanadium_pack.mk)
 #
 # The 'webview' module itself is defined in this repo's Android.bp; the
-# external/vanadium provider repo must be declared in the manifest (see
+# vendor/vanadium provider repo must be declared in the manifest (see
 # README).
 
 PRODUCT_PACKAGES += \
