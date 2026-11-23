@@ -3,31 +3,29 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
-// Shim module for the 'webview' name media_product.mk always packages (the
-// vanilla chromium prebuilt is dropped from the build through remove-project
-// entries in the device manifest, so without a module the make existence
-// check errors). installable: false: the actual WebView provider is
-// vendor/vanadium's TrichromeWebViewDualArch, packaged directly by
-// vanadium_pack.mk (preprocessed, GrapheneOS signature intact, required
-// VanadiumConfig + loader libs). The apk content here is irrelevant because
-// this module is never installed; it points at the small VanadiumConfig
-// prebuilt to avoid copying the WebView apk for nothing.
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
+// Name placeholder for 'webview'.
 //
-// overrides: ["Jelly"] is the removal mechanism: vendor/lineage/config/
-// common.mk packages Jelly, and make inheritance freezes per-file snapshots
-// (build/make/core/node_fns.mk), so no PRODUCT_PACKAGES filter-out can undo
-// an inherited entry. A module reference to Jelly resolves to this shim and
-// nothing is installed in its place -> the package disappears from the
-// image. Only applies when this pack is in the build.
-android_app_import {
+// build/make/target/product/media_product.mk keeps 'webview' in PRODUCT_PACKAGES, and a
+// name inherited that way cannot be dropped from a child mk (node_fns.mk freezes a
+// per-file snapshot of PRODUCT_PACKAGES and re-injects the inherited literals when it
+// expands the @inherit: tags). The manifest drops the five chromium-webview projects, so
+// nothing else defines the name any more and the packaging check enabled by
+// vendor/lineage/config/common.mk (enforce-product-packages-exist) fails on it. The
+// allow-list is not an option here: PRODUCT_ENFORCE_PACKAGES_EXIST_ALLOW_LIST is not an
+// inherited product var, it exists only as a read-only PRODUCTS.<product mk> value that
+// vendor/lineage/config/common.mk already froze for this product.
+//
+// A header-only cc module is exported to Make (so the name resolves) and installs nothing
+// (no rule in out/soong/installs-<product>.mk), which keeps the Chromium apk out of the
+// image. The WebView provider apk itself is TrichromeWebViewDualArch from vendor/vanadium,
+// packaged by vanadium_pack.mk.
+cc_library_headers {
     name: "webview",
     product_specific: true,
-    installable: false,
 
-    overrides: [
-        "Jelly",
-    ],
-
-    apk: ":VanadiumConfig",
-    preprocessed: true,
+    export_include_dirs: ["."],
 }
