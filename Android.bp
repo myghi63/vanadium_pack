@@ -8,7 +8,18 @@
 // projects are dropped from the build through remove-project entries in the
 // device manifest; this module is what keeps the packaging reference alive.
 // The apk is a symlink to the provider repo at vendor/vanadium so the payload
-// is never copied (vendor/ is what AdServices visibility already grants).
+// is never copied in the repo.
+
+// Materialize the symlink as a regular file: a preprocessed import stages the
+// apk with cp, which preserves the symlink itself and left a broken relative
+// link in the product staging dir.
+genrule {
+    name: "vanadium_webview_copy",
+    srcs: ["VanadiumWebView.apk"],
+    out: ["webview_copy.apk"],
+    cmd: "cp $(in) $(out)",
+}
+
 android_app_import {
     name: "webview",
     product_specific: true,
@@ -23,12 +34,9 @@ android_app_import {
         "VanadiumConfig",
     ],
 
-    apk: "VanadiumWebView.apk",
+    apk: ":vanadium_webview_copy",
 
-    // The apk is already aligned and signed by GrapheneOS. presigned (not
-    // preprocessed) on purpose: preprocessed copies the apk with cp, which for
-    // the symlink above stored a broken relative symlink in out; presigned runs
-    // zipalign through the resolved file and writes a real apk (signature
-    // preserved, the .idsig stays unused for /product).
-    presigned: true,
+    // Presigned apks with targetSdkVersion >= 30 must be preprocessed:
+    // zipalign would wreck the v2/v3 signature GrapheneOS signed them with.
+    preprocessed: true,
 }
