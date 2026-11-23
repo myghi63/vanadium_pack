@@ -25,7 +25,10 @@ android_app_import {
 
     apk: "VanadiumWebView.apk",
 
-    // Aligned and signed by GrapheneOS already; the .idsig is unused for
-    // system partitions (dm-verity covers /product).
-    preprocessed: true,
+    // The apk is already aligned and signed by GrapheneOS. presigned (not
+    // preprocessed) on purpose: preprocessed copies the apk with cp, which for
+    // the symlink above stored a broken relative symlink in out; presigned runs
+    // zipalign through the resolved file and writes a real apk (signature
+    // preserved, the .idsig stays unused for /product).
+    presigned: true,
 }
