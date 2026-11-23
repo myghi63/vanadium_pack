@@ -48,9 +48,12 @@ $(call inherit-product-if-exists, vendor/vanadium_pack/vanadium_pack.mk)
 
 ## What it ships
 
-- `webview` — `android_app_import` of the Vanadium WebView apk (arm64), the
-  module `media_product.mk` always packages; `VanadiumConfig` follows via
-  `required`.
+- `TrichromeWebViewDualArch` — the WebView provider (arm64), installed
+  directly from `vendor/vanadium` preprocessed (GrapheneOS signature intact);
+  brings `VanadiumConfig` and the loader libs via its own `required`.
+- `webview` — a `filegroup` shim so the name `media_product.mk` always
+  packages exists without importing any apk (symlinked apk sources break in
+  the Soong sandbox, so the pack never re-imports prebuilts).
 - `TrichromeChromeDualArch` — the Vanadium browser (arm64-multilib).
 - `VanadiumWebviewOverlay` — static RRO that makes the framework accept
   `app.vanadium.webview` as the WebView provider (`config_webview_packages.xml`

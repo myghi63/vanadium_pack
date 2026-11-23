@@ -12,6 +12,7 @@
 
 PRODUCT_PACKAGES += \
     VanadiumWebviewOverlay \
+    TrichromeWebViewDualArch \
     TrichromeChromeDualArch \
     VanadiumConfig
 
