@@ -11,13 +11,19 @@ Declare the GrapheneOS tree adapter (the prebuilt provider repo) and this pack:
 ```xml
 <remote name="grapheneos-gl" fetch="https://gitlab.com/grapheneos/" />
 
-<project name="platform_external_vanadium" path="external/vanadium"
+<project name="platform_external_vanadium" path="vendor/vanadium"
          remote="grapheneos-gl" revision="17" clone-depth="1" />
 <project name="vanadium_pack" path="vendor/vanadium_pack"
          remote="myghi63" revision="main" />
 ```
 
-Pick the `external/vanadium` branch matching the Android version (`17` =
+Sync the provider repo under `vendor/` (not `external/`): the
+`android.ext.adservices` framework module (`packages/modules/AdServices`)
+grants visibility to `//vendor:__subpackages__` but not to arbitrary
+`external/` paths, so the Trichrome imports work without patching or
+forking AdServices.
+
+Pick the provider repo branch matching the Android version (`17` =
 Android 17 = lineage-24.0). Pin a tag for reproducibility (e.g. `2026111800`).
 
 Drop the vanilla Chromium webview projects (their `external/chromium-webview`

@@ -14,7 +14,7 @@
      limitations under the License.
 
      Vanadium pack override: the vanilla Chromium webview is not part of the
-     build; the provider is GrapheneOS Vanadium WebView (external/vanadium,
+     build; the provider is GrapheneOS Vanadium WebView (vendor/vanadium,
      imported by vendor/vanadium_pack as the 'webview' module).
 -->
 
