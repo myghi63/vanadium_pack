@@ -51,12 +51,20 @@ $(call inherit-product-if-exists, vendor/vanadium_pack/vanadium_pack.mk)
   directly from `vendor/vanadium` preprocessed (GrapheneOS signature intact);
   brings `VanadiumConfig` and the loader libs via its own `required`.
 - `TrichromeChromeDualArch` — the Vanadium browser (arm64-multilib).
-- `webview` — a shim module (installable, never installed) satisfying the
-  name `media_product.mk` always packages, and carrying `overrides:
-  ["Jelly"]`: make inheritance freezes per-file snapshots, so an inherited
-  `PRODUCT_PACKAGES` entry cannot be filtered out by a child mk — the Soong
-  overrides mutator is the only mechanism that removes Jelly, and it applies
-  only when this pack is in the build.
+- Jelly (`org.lineageos.jelly`) — dropped by `overrides: ["Jelly"]` on the
+  overlay module: make inheritance freezes per-file snapshots, so an
+  inherited `PRODUCT_PACKAGES` entry cannot be filtered out by a child mk;
+  the Soong overrides mutator is the mechanism that actually removes it, and
+  it only applies when this pack is in the build.
+- `webview` — the name `media_product.mk` keeps in `PRODUCT_PACKAGES` for the
+  dropped chromium prebuilt. It cannot be filtered out of an inherited
+  `PRODUCT_PACKAGES`, and it cannot be allow-listed from here either
+  (`PRODUCT_ENFORCE_PACKAGES_EXIST_ALLOW_LIST` is not an inherited product var:
+  it only exists as a read-only `PRODUCTS.<product mk>` value that
+  `vendor/lineage/config/common.mk` already froze). This repo defines the name
+  as a module that installs nothing, so the packaging existence check resolves
+  it and the Chromium apk stays out of the image. See the comment in
+  `Android.bp`.
 - `VanadiumWebviewOverlay` — static RRO that makes the framework accept
   `app.vanadium.webview` as the WebView provider (`config_webview_packages.xml`
   lists package names only, no signature attribute is needed).
