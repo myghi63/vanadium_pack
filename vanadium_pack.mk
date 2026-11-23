@@ -16,7 +16,8 @@ PRODUCT_PACKAGES += \
     TrichromeChromeDualArch \
     VanadiumConfig
 
-# vendor/lineage/config/common.mk packages Jelly; with Vanadium as the browser
-# it is dropped. This only happens when this pack (and with it the Vanadium
-# repos) is in the build.
-PRODUCT_PACKAGES := $(filter-out Jelly,$(PRODUCT_PACKAGES))
+# media_product.mk packages the 'webview' module (name of the vanilla chromium
+# prebuilt, nothing else in the tree references it) and vendor/lineage/config/
+# common.mk packages Jelly; both are replaced by Vanadium here. This only
+# happens when this pack (and with it the Vanadium repos) is in the build.
+PRODUCT_PACKAGES := $(filter-out webview Jelly,$(PRODUCT_PACKAGES))
