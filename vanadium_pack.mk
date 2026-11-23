@@ -16,8 +16,7 @@ PRODUCT_PACKAGES += \
     TrichromeChromeDualArch \
     VanadiumConfig
 
-# media_product.mk packages the 'webview' module (name of the vanilla chromium
-# prebuilt, nothing else in the tree references it) and vendor/lineage/config/
-# common.mk packages Jelly; both are replaced by Vanadium here. This only
-# happens when this pack (and with it the Vanadium repos) is in the build.
-PRODUCT_PACKAGES := $(filter-out webview Jelly,$(PRODUCT_PACKAGES))
+# The 'webview' module shim (name required by media_product.mk) and the Jelly
+# drop are both handled in Android.bp: make inheritance freezes per-file
+# snapshots, so PRODUCT_PACKAGES cannot be filtered from an inherited child
+# mk; the shim module exists only when this pack is in the build.

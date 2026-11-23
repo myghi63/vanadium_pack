@@ -39,8 +39,7 @@ path is what `media_product.mk` packaging otherwise pulls) with:
 
 ## Hook
 
-In the device product mk, AFTER the `vendor/lineage/config/*` inherits (the
-Jelly/webview filtering below relies on that order):
+In the device product mk (any order among the add-on inherits):
 
 ```make
 $(call inherit-product-if-exists, vendor/vanadium_pack/vanadium_pack.mk)
@@ -52,11 +51,12 @@ $(call inherit-product-if-exists, vendor/vanadium_pack/vanadium_pack.mk)
   directly from `vendor/vanadium` preprocessed (GrapheneOS signature intact);
   brings `VanadiumConfig` and the loader libs via its own `required`.
 - `TrichromeChromeDualArch` — the Vanadium browser (arm64-multilib).
-- `webview` and Jelly are filtered out of `PRODUCT_PACKAGES`: the `webview`
-  name is only `media_product.mk` packaging the vanilla chromium prebuilt
-  (re-adding it would need a module, and Soong cannot re-import these apks
-  through symlinks/shims — filegroups are variantless, sandboxed copies keep
-  symlinks dangling); nothing else references the name.
+- `webview` — a shim module (installable, never installed) satisfying the
+  name `media_product.mk` always packages, and carrying `overrides:
+  ["Jelly"]`: make inheritance freezes per-file snapshots, so an inherited
+  `PRODUCT_PACKAGES` entry cannot be filtered out by a child mk — the Soong
+  overrides mutator is the only mechanism that removes Jelly, and it applies
+  only when this pack is in the build.
 - `VanadiumWebviewOverlay` — static RRO that makes the framework accept
   `app.vanadium.webview` as the WebView provider (`config_webview_packages.xml`
   lists package names only, no signature attribute is needed).
