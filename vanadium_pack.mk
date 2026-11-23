@@ -2,8 +2,8 @@
 # SPDX-FileCopyrightText: Myghi63
 # SPDX-License-Identifier: Apache-2.0
 #
-# Vanadium (GrapheneOS) browser pack. Hook from a device mk AFTER the
-# vendor/lineage config inherits:
+# Vanadium (GrapheneOS) browser pack. Hook from a device mk's optional
+# add-on block:
 #     $(call inherit-product-if-exists, vendor/vanadium_pack/vanadium_pack.mk)
 #
 # The 'webview' module itself is defined in this repo's Android.bp; the
