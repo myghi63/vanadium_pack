@@ -1,0 +1,30 @@
+//
+// SPDX-FileCopyrightText: Myghi63
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// The 'webview' module media_product.mk always packages, provided here as the
+// GrapheneOS Vanadium WebView prebuilt. The vanilla Lineage chromium-webview
+// projects are dropped from the build through remove-project entries in the
+// device manifest; this module is what keeps the packaging reference alive.
+// The apk is a symlink to external/vanadium so the payload is never copied.
+android_app_import {
+    name: "webview",
+    product_specific: true,
+
+    optional_uses_libs: [
+        "android.test.base",
+        "androidx.window.extensions",
+        "android.ext.adservices",
+    ],
+
+    required: [
+        "VanadiumConfig",
+    ],
+
+    apk: "VanadiumWebView.apk",
+
+    // Aligned and signed by GrapheneOS already; the .idsig is unused for
+    // system partitions (dm-verity covers /product).
+    preprocessed: true,
+}
